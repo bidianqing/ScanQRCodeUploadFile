@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section Styles{ 
+    
+}
+
+<div id="qrcode"></div>
+<div id="app">
+    <img v-for="item in images" style="width: 100px; height: 100px" :src="item"/>
+</div>
+
+@section Scripts{
+    <script src="https://cdn.bootcdn.net/ajax/libs/qrcodejs/1.0.0/qrcode.js"></script>
+    <script src="~/lib/signalr/signalr.js"></script>
+    <script type="text/javascript">
+        var app = new Vue({
+            data: {
+                images: []
+            },
+            methods: {
+                
+            },
+            mounted: function () {
+                
+            }
+        });
+        app.$mount('#app');
+
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub")
+            .build();
+
+        connection.on("ReceiveMessage", function (imageUrl) {
+            app.images.push(imageUrl);
+        });
+
+        connection.start().then(function () {
+            var text = `http://localhost:5000/Home/Privacy?connectionId=${connection.connectionId}`;
+            new QRCode(document.getElementById("qrcode"), text);
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+        
+    </script>
+}
