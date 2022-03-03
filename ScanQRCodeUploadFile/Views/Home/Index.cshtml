@@ -37,7 +37,7 @@
         });
 
         connection.start().then(function () {
-            var text = `http://localhost:5000/Home/Privacy?connectionId=${connection.connectionId}`;
+            var text = `http://10.237.168.105:5000/Home/Privacy?connectionId=${connection.connectionId}`;
             new QRCode(document.getElementById("qrcode"), text);
         }).catch(function (err) {
             return console.error(err.toString());
